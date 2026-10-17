@@ -1,0 +1,26 @@
+name: Deploy React App
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker run -e CI=true my-react-app npm run test 
+      - run: docker build -t mahmoudnassar21/multi-client ./microservices/client
+      - run: docker build -t mahmoudnassar21/multi-server ./microservices/server
+      - run: docker build -t mahmoudnassar21/multi-worker ./microservices/worker
+      - run: docker build -t mahmoudnassar21/multi-nginx ./microservices/nginx
+
+      - name: Push Docker Images
+        run: |
+          docker push mahmoudnassar21/multi-client
+          docker push mahmoudnassar21/multi-server
+          docker push mahmoudnassar21/multi-worker
+          docker push mahmoudnassar21/multi-nginx
