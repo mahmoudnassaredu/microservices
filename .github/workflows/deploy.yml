@@ -24,3 +24,4 @@ jobs:
           docker push mahmoudnassar21/multi-server
           docker push mahmoudnassar21/multi-worker
           docker push mahmoudnassar21/multi-nginx
+          #
